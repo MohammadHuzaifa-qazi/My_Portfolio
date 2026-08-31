@@ -1,0 +1,70 @@
+--- Page 1 ---
+MOHAMMAD HUZAIFA  
+Agentic AI Developer  |  Full-Stack Engineer  |  LLM Systems  
+📧 [huzaifaqazi63@email.com]   |   📞 [0318-2425623]   |   📍 Karachi, Pakistan   |   github.com/MohammadHuzaifa-qazi  
+PROFESSIONAL SUMMARY  
+ 
+BSAI undergraduate (5th Semester) and Governor's Initiative scholar with 1+ year of hands-on experience building Agentic 
+AI systems, LLM-powered applications, and production-ready full-stack web apps. Delivered 4 complete projects including 2 
+hackathon submissions and a live friend client website. Proficient in Python, TypeScript, Next.js, LangChain, LangGraph, and 
+the OpenAI Agents SDK. Seeking a software or AI internship to contribute to real-world products and grow as an engineer.  
+EDUCATION  
+ 
+Bachelor of Science in Artificial Intelligence (BSAI)      
+SMI University Karachi  —  Currently in 5th Semester  |  Expected Graduation: 2028  
+AI, Web 3.0 & Metaverse Developer Certification      
+Governor's Initiative for AI, Web 3.0 & Metaverse  —  Batch 1  |  Currently Enrolled  
+TECHNICAL SKILLS  
+ 
+Languages  Python, TypeScript, JavaScript  
+Frameworks  Next.js 16, LangChain, LangGraph  
+AI / LLM  OpenAI Agents SDK, LLM Concepts (Prompt Engineering, RAG, Tool-Calling, Agent Orchestration, 
+Context Management), LangGraph State Machines, Numpy, Pandas, Scikit-learn  
+DevOps  Docker, Git, GitHub, Vercel  
+Databases  PostgreSQL (Neon Serverless), SQLModel   
+UI & Styling  Tailwind CSS v4, Framer Motion, Responsive Design  
+PROJECTS  
+ 
+Full-Stack Todo App  —  Hackathon II (GIAIC)  ·  Python · FastAPI · Next.js 16 · PostgreSQL · Docker · JWT  ·  hackathon-
+todoapp-five.vercel.app  
+▸ Built a multi-user task management app with secure JWT authentication, enabling full CRUD operations and per-user 
+data isolation.  
+▸ Implemented service-oriented FastAPI backend with SQLModel ORM connected to Neon Serverless PostgreSQL; 
+containerized with Docker Compose.  
+▸ Deployed to Vercel (frontend) with a live production URL within hackathon timeline.  
+AI Textbook Generator  —  Hackathon I (GIAIC)  ·  Python · FastAPI · RAG · Docusaurus · GitHub Pages  ·  
+huzaifaqazi.github.io/Hackathon_Book_Generated  
+▸ Generated a complete textbook on Physical AI & Humanoid Robotics using spec-driven development and AI-assisted 
+content generation.  
+▸ Built a RAG-powered chatbot backend (FastAPI) enabling semantic Q&A over the generated textbook content. ▸ 
+Published book with Docusaurus and deployed to GitHub Pages, making it publicly accessible.  
+
+--- Page 2 ---
+Central Scents — Luxury Perfume E-Commerce  (Friend Client)  ·  Next.js 16 · Tailwind CSS v4 · Framer Motion ·  
+Web3Forms · Vercel  ·  central-scents-perfume-store.vercel.app  
+▸ Designed and developed a premium brand showcase for a real client featuring parallax scroll, glass-morphism UI, and 
+animated product pages.  
+▸ Implemented fully responsive multi-page site (Home, Products, Product Detail, Contact, About) with filterable product 
+grid and client-side contact form.  
+▸ Integrated Web3Forms API for email submissions and deployed to Vercel with environment-variable management.  
+ThermalOS  —  Forty Guard Hackathon  (Team Project)  ·  Python · FastAPI · Next.js · Docker  ·  
+github.com/MohammadHuzaifa-qazi/ThermalOS  
+▸ Collaborated in a team to build ThermalOS within a competitive hackathon format, contributing to both backend 
+(Python/FastAPI) and frontend development.  
+▸ Applied rapid prototyping and team coordination skills to deliver a functional product under time constraints.  
+HACKATHONS & ACHIEVEMENTS  
+ 
+▸ GIAIC Hackathon II — Spec-Driven Full-Stack Development: Delivered complete Todo App with JWT auth, Docker, and 
+Vercel deployment.  
+▸ GIAIC Hackathon I — Physical AI Textbook with RAG chatbot backend: Published live at GitHub Pages.  
+▸ Forty Guard Hackathon — Team collaboration: Built ThermalOS full-stack application.  
+▸ 99th Percentile, Grade A — Governor's Initiative for AI, Web 3.0 & Metaverse (Q3 Assessment).  
+CERTIFICATIONS  
+ 
+▸ Agentic AI & OpenAI Agents SDK  —  Governor's Initiative for AI, Web 3.0 & Metaverse  
+▸ LangChain & LangGraph for Agentic AI Workflows  —  Governor's Initiative  
+ADDITIONAL INFORMATION  
+ 
+▸ Machine Learning foundations: K-Nearest Neighbors, K-Means Clustering, Neural Networks, Linear & Logistic 
+Regression.  
+
