@@ -41,7 +41,7 @@ export function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center px-6 md:px-12 lg:px-20 pt-32 pb-20 overflow-hidden"
+      className="relative min-h-screen flex items-center px-6 md:px-12 lg:px-20 pt-36 pb-20 overflow-hidden"
     >
       <ParticleBackground />
 

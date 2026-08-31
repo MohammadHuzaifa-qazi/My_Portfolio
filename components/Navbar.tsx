@@ -99,10 +99,10 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <div className="hidden md:block">
+            <div className="hidden sm:block">
               <ThemeToggle />
             </div>
-            <div className="hidden md:block">
+            <div className="hidden sm:block">
               <GitHubBtn />
             </div>
 
