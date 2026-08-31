@@ -19,7 +19,7 @@ function GitHubIcon() {
 function GitHubBtn({ className }: { className?: string }) {
   return (
     <a href={SITE_CONFIG.github} target="_blank" rel="noopener noreferrer" className={className}>
-      <MovingBorderButton duration={3000} className="px-4 py-2 h-10 text-sm font-medium flex items-center gap-2">
+      <MovingBorderButton duration={3000} className="px-3 py-2 h-9 md:px-4 md:h-10 text-xs md:text-sm font-medium flex items-center gap-2">
         <GitHubIcon />
         <span className="text-black dark:text-white">GitHub</span>
       </MovingBorderButton>
@@ -98,13 +98,11 @@ export function Navbar() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <div className="hidden sm:block">
               <ThemeToggle />
             </div>
-            <div className="hidden sm:block">
-              <GitHubBtn />
-            </div>
+            <GitHubBtn />
 
             <button
               onClick={() => setIsOpen(!isOpen)}
