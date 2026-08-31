@@ -97,7 +97,7 @@ export function Hero() {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 3.0 }}
-            className="flex flex-col sm:flex-row gap-5"
+            className="flex flex-col sm:flex-row gap-5 mt-12"
           >
             <a href="#projects" className="dew rounded-[2rem] px-8 py-4 font-sans text-[12px] uppercase tracking-[0.2em] text-white text-center bg-transparent hover:bg-[rgb(46,167,192)] hover:shadow-[0_0_30px_5px_rgba(24,162,180,0.815)] transition-all duration-200">
               View Projects
