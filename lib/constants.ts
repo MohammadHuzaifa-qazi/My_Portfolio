@@ -16,10 +16,8 @@ export const SITE_CONFIG = {
   title: "Agentic AI Developer | Full-Stack Engineer | LLM Systems",
   description:
     "Portfolio of Mohammad Huzaifa — Agentic AI Developer, Full-Stack Engineer, and LLM Systems specialist.",
-  email: "huzaifaqazi63@email.com",
+  email: "huzaifaqazi63@gmail.com",
   github: "https://github.com/MohammadHuzaifa-qazi",
-  linkedin: "#", // Placeholder
-  fiverr: "#", // Placeholder
 };
 
 export const NAV_LINKS = [
@@ -34,7 +32,7 @@ export const NAV_LINKS = [
 export const STATS = [
   { label: "Projects", value: 5, icon: Target },
   { label: "Hackathons", value: 3, icon: Trophy },
-  { label: "Repositories", value: 40, suffix: "+", icon: Award },
+  { label: "Repositories", value: 44, suffix: "+", icon: Award },
   { label: "Freelance Clients", value: 1, icon: Users },
 ];
 

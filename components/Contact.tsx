@@ -13,22 +13,6 @@ function GitHubIcon({ className }: { className?: string }) {
   );
 }
 
-function LinkedInIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-    </svg>
-  );
-}
-
-function FiverrIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M23.073 16.437c-1.657 1.464-4.117 2.135-6.438 2.135-2.321 0-4.781-.671-6.438-2.135-1.657-1.464-1.657-3.464 0-4.928 1.657-1.464 4.117-2.135 6.438-2.135 2.321 0 4.781.671 6.438 2.135 1.657 1.464 1.657 3.464 0 4.928zm-11.836-4.928c-1.657-1.464-4.117-2.135-6.438-2.135-2.321 0-4.781.671-6.438 2.135-1.657 1.464-1.657 3.464 0 4.928 1.657 1.464 4.117 2.135 6.438 2.135 2.321 0 4.781-.671 6.438-2.135 1.657-1.464 1.657-3.464 0-4.928z"/>
-    </svg>
-  );
-}
-
 export function Contact() {
   const [formData, setFormData] = useState({
     name: "",
@@ -37,27 +21,37 @@ export function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError(null);
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          access_key: "YOUR_WEB3FORMS_ACCESS_KEY",
+          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY,
+          subject: `Portfolio message from ${formData.name}`,
+          from_name: "Portfolio Contact Form",
           ...formData,
         }),
       });
 
-      if (response.ok) {
+      const result = await response.json();
+
+      if (response.ok && result.success) {
         setSubmitted(true);
         setFormData({ name: "", email: "", message: "" });
+      } else {
+        setError(
+          result.message || "Something went wrong. Please try again or email me directly."
+        );
       }
     } catch {
-      console.error("Form submission failed");
+      setError("Network error. Please try again or email me directly.");
     } finally {
       setIsSubmitting(false);
     }
@@ -98,34 +92,6 @@ export function Contact() {
                   </div>
                   <span className="text-white/50 group-hover:text-white transition-colors font-sans text-sm">
                     GitHub
-                  </span>
-                </a>
-
-                <a
-                  href={SITE_CONFIG.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="liquid-panel flex items-center gap-4 p-4 rounded-[1.6rem] transition-all duration-300 hover:border-[#61DAFB]/30 group"
-                >
-                  <div className="p-3 rounded-[1rem] bg-[#61DAFB]/10 group-hover:bg-[#61DAFB]/15 transition-colors">
-                    <LinkedInIcon className="w-5 h-5 text-[#61DAFB]" />
-                  </div>
-                  <span className="text-white/50 group-hover:text-white transition-colors font-sans text-sm">
-                    LinkedIn
-                  </span>
-                </a>
-
-                <a
-                  href={SITE_CONFIG.fiverr}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="liquid-panel flex items-center gap-4 p-4 rounded-[1.6rem] transition-all duration-300 hover:border-[#61DAFB]/30 group"
-                >
-                  <div className="p-3 rounded-[1rem] bg-[#61DAFB]/10 group-hover:bg-[#61DAFB]/15 transition-colors">
-                    <FiverrIcon className="w-5 h-5 text-[#61DAFB]" />
-                  </div>
-                  <span className="text-white/50 group-hover:text-white transition-colors font-sans text-sm">
-                    Fiverr
                   </span>
                 </a>
 
@@ -209,6 +175,10 @@ export function Contact() {
                       placeholder="Your message..."
                     />
                   </div>
+
+                  {error && (
+                    <p className="text-red-400/90 text-sm text-center">{error}</p>
+                  )}
 
                   <button
                     type="submit"
