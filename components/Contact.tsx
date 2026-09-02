@@ -29,10 +29,17 @@ export function Contact() {
     setError(null);
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          access_key:
+            process.env.NEXT_PUBLIC_WEB3FORMS_KEY ||
+            "6ae0e455-a422-426d-b380-6dfd1dd88c4a",
+          subject: `Portfolio message from ${formData.name}`,
+          from_name: "Portfolio Contact Form",
+          ...formData,
+        }),
       });
 
       const result = await response.json();
