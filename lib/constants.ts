@@ -18,6 +18,7 @@ export const SITE_CONFIG = {
     "Portfolio of Mohammad Huzaifa — Agentic AI Developer, Full-Stack Engineer, and LLM Systems specialist.",
   email: "huzaifaqazi63@gmail.com",
   github: "https://github.com/MohammadHuzaifa-qazi",
+  linkedin: "https://www.linkedin.com/in/muhammad-huzaifa-5b79502ba/",
 };
 
 export const NAV_LINKS = [
