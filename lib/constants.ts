@@ -84,7 +84,7 @@ export const PROJECTS = [
     description:
       "Built a multi-user task management app with secure JWT authentication, enabling full CRUD operations and per-user data isolation.",
     tech: ["Python", "FastAPI", "Next.js 16", "PostgreSQL", "Docker", "JWT"],
-    liveUrl: "https://hackathon-todoapp-five.vercel.app",
+    liveUrl: "https://hackathon-todo-app-five.vercel.app/",
     githubUrl: "#",
     tag: "Hackathon II",
   },
