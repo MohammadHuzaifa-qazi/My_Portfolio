@@ -116,13 +116,13 @@ export const PROJECTS = [
     tag: "Team Project",
   },
   {
-    title: "AI Customer Support Agent",
+    title: "RAG Resume Chatbot",
     description:
-      "Built an intelligent customer support agent using OpenAI SDK with tool-calling capabilities and context management.",
-    tech: ["Python", "FastAPI", "OpenAI SDK"],
-    liveUrl: "#",
+      "Built a retrieval-augmented chatbot that answers questions about my resume — embeds resume data, retrieves relevant context, and generates accurate responses.",
+    tech: ["Python", "Streamlit", "RAG", "LangChain", "GroqLLM"],
+    liveUrl: "https://huzaifa-resume-chatbot.streamlit.app/",
     githubUrl: "#",
-    tag: "AI Project",
+    tag: "AI Rag Project",
   },
   {
     title: "LangGraph Agentic Pipeline",
