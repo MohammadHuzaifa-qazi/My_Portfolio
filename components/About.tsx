@@ -61,7 +61,7 @@ export function About() {
               </p>
               <p className="text-white/45 text-lg leading-relaxed">
                 Delivered 4 complete projects including 2 hackathon submissions and
-                a live friend client website. Proficient in Python, TypeScript,
+                a live client website. Proficient in Python, TypeScript,
                 Next.js, LangChain, LangGraph, and the OpenAI Agents SDK.
               </p>
 

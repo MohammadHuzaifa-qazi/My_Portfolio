@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { NAV_LINKS, SITE_CONFIG } from "@/lib/constants";
 import { useScrollSpy } from "@/hooks/useScrollSpy";
-import { ThemeToggle } from "./ui/theme-toggle";
 import { MovingBorderButton } from "./ui/moving-border-button";
 
 function GitHubIcon() {
@@ -99,9 +98,6 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="hidden sm:block">
-              <ThemeToggle />
-            </div>
             <GitHubBtn />
 
             <button

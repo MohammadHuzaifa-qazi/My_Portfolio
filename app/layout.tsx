@@ -56,12 +56,9 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               try {
-                const theme = localStorage.getItem('theme');
-                if (theme === 'light') {
-                  document.documentElement.classList.remove('dark');
-                } else {
-                  document.documentElement.classList.add('dark');
-                }
+                // Always force dark theme — light theme is not yet supported
+                localStorage.removeItem('theme');
+                document.documentElement.classList.add('dark');
               } catch (e) {}
             `,
           }}
