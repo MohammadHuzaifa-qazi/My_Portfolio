@@ -37,11 +37,11 @@ export function Projects() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="liquid-panel rounded-[2.5rem] p-8 group relative overflow-hidden"
+                className="liquid-panel rounded-[2.5rem] p-8 group relative overflow-hidden flex flex-col"
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-[#61DAFB]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                <div className="relative z-10">
+                <div className="relative z-10 flex flex-col flex-1">
                   <div className="flex items-start justify-between mb-6">
                     <span className="px-4 py-1.5 text-[10px] font-sans uppercase tracking-[0.15em] rounded-full bg-[#61DAFB]/10 text-[#61DAFB] border border-[#61DAFB]/20">
                       {project.tag}
@@ -67,13 +67,13 @@ export function Projects() {
                     ))}
                   </div>
 
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 mt-auto">
                     {project.liveUrl && project.liveUrl !== "#" && (
                       <a
                         href={project.liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="dew flex items-center gap-2 px-5 py-2.5 rounded-[1.4rem] font-sans text-[10px] uppercase tracking-[0.15em] text-white"
+                        className="dew flex-1 flex items-center justify-center gap-2 px-5 py-2.5 rounded-[1.4rem] font-sans text-[10px] uppercase tracking-[0.15em] text-white"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                         Live
@@ -84,7 +84,7 @@ export function Projects() {
                         href={project.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-5 py-2.5 rounded-[1.4rem] border border-white/10 bg-white/[0.03] font-sans text-[10px] uppercase tracking-[0.15em] text-white/50 transition-all duration-300 hover:border-[#61DAFB]/30 hover:text-white/70"
+                        className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 rounded-[1.4rem] border border-white/10 bg-white/[0.03] font-sans text-[10px] uppercase tracking-[0.15em] text-white/50 transition-all duration-300 hover:border-[#61DAFB]/30 hover:text-white/70"
                       >
                         <GitHubIcon className="w-3.5 h-3.5" />
                         Code
