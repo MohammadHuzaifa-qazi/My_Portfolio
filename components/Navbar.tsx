@@ -46,7 +46,7 @@ export function Navbar() {
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.6, delay: 2 }}
+        transition={{ duration: 0.6, delay: 0.8 }}
         className="fixed inset-x-0 top-0 z-[60] px-4 py-4 md:px-8"
       >
         <div

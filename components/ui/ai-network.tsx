@@ -188,7 +188,7 @@ export function AINetwork() {
         className="absolute top-4 right-4 liquid-panel rounded-[1.2rem] px-4 py-3"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 2.5, duration: 0.5 }}
+        transition={{ delay: 1.5, duration: 0.5 }}
       >
         <div className="flex items-center gap-2 mb-1">
           <div className="h-1.5 w-1.5 rounded-full bg-[#61DAFB] animate-pulse-react" />
@@ -202,7 +202,7 @@ export function AINetwork() {
         className="absolute bottom-20 right-4 liquid-panel rounded-[1.2rem] px-4 py-3"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 3, duration: 0.5 }}
+        transition={{ delay: 1.8, duration: 0.5 }}
       >
         <div className="flex items-center gap-2 mb-1">
           <div className="h-1.5 w-1.5 rounded-full bg-[#78FFB4] animate-pulse-react" />
@@ -216,7 +216,7 @@ export function AINetwork() {
         className="absolute top-1/3 -left-2 liquid-panel rounded-[1.2rem] px-4 py-3"
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 3.5, duration: 0.5 }}
+        transition={{ delay: 2.1, duration: 0.5 }}
       >
         <div className="flex items-center gap-2 mb-1">
           <div className="h-1.5 w-1.5 rounded-full bg-[#FFB86C] animate-pulse-react" />
@@ -230,7 +230,7 @@ export function AINetwork() {
         className="absolute bottom-4 left-1/2 -translate-x-1/2 liquid-panel rounded-[1.2rem] px-4 py-3"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 4, duration: 0.5 }}
+        transition={{ delay: 2.4, duration: 0.5 }}
       >
         <div className="flex items-center gap-2 mb-1">
           <div className="h-1.5 w-1.5 rounded-full bg-[#BD93F9] animate-pulse-react" />

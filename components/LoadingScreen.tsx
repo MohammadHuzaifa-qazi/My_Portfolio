@@ -7,7 +7,7 @@ export function LoadingScreen() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2200);
+    const timer = setTimeout(() => setIsLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
 
@@ -58,7 +58,7 @@ export function LoadingScreen() {
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: 120 }}
-              transition={{ delay: 0.5, duration: 1.5, ease: "easeInOut" }}
+              transition={{ delay: 0.3, duration: 0.4, ease: "easeInOut" }}
               className="h-[2px] bg-gradient-to-r from-transparent via-[#61DAFB] to-transparent"
             />
           </motion.div>

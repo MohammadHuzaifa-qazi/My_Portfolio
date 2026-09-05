@@ -29,9 +29,9 @@ export function Hero() {
           } else {
             clearInterval(roleInterval);
           }
-        }, 35);
+        }, 18);
       }
-    }, 90);
+    }, 45);
     return () => {
       clearInterval(nameTimer);
       clearInterval(roleInterval);
@@ -56,7 +56,7 @@ export function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 2.2 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
             className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.03] px-5 py-3 mb-8"
           >
             <div className="h-2 w-2 rounded-full bg-[#61DAFB] shadow-[0_0_15px_rgba(97,218,251,0.8)] animate-pulse-react" />
@@ -68,7 +68,7 @@ export function Hero() {
           <motion.p
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 2.4 }}
+            transition={{ duration: 0.5, delay: 1.0 }}
             className="text-[#61DAFB] text-lg mb-4 font-sans tracking-wide"
           >
             Hi, I&apos;m
@@ -77,7 +77,7 @@ export function Hero() {
           <motion.h1
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 2.6 }}
+            transition={{ duration: 0.5, delay: 1.1 }}
             className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-[0.95]"
           >
             <span className="gradient-text">{nameText}</span>
@@ -87,7 +87,7 @@ export function Hero() {
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 2.8 }}
+            transition={{ duration: 0.5, delay: 1.2 }}
             className="text-xl md:text-2xl text-white/45 mb-10 h-8 font-light"
           >
             <span>{roleText}</span>
@@ -96,7 +96,7 @@ export function Hero() {
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 3.0 }}
+            transition={{ duration: 0.5, delay: 1.3 }}
             className="flex flex-col sm:flex-row gap-5 mt-12"
           >
             <a href="#projects" className="dew rounded-[2rem] px-8 py-4 font-sans text-[12px] uppercase tracking-[0.2em] text-white text-center bg-transparent hover:bg-[rgb(46,167,192)] hover:shadow-[0_0_30px_5px_rgba(24,162,180,0.815)] transition-all duration-200">
@@ -110,7 +110,7 @@ export function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 3.2 }}
+            transition={{ duration: 0.5, delay: 1.4 }}
             className="mt-16 flex flex-wrap gap-5"
           >
             <div className="liquid-panel rounded-[1.8rem] px-6 py-5">
@@ -132,7 +132,7 @@ export function Hero() {
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 2.5 }}
+          transition={{ duration: 1, delay: 1.0 }}
           className="hidden lg:flex items-center justify-center"
         >
           <AINetwork />
@@ -142,7 +142,7 @@ export function Hero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 3.5, duration: 0.5 }}
+        transition={{ delay: 1.7, duration: 0.5 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
       >
         <a
