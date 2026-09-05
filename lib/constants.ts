@@ -85,7 +85,7 @@ export const PROJECTS = [
       "Built a multi-user task management app with secure JWT authentication, enabling full CRUD operations and per-user data isolation.",
     tech: ["Python", "FastAPI", "Next.js 16", "PostgreSQL", "Docker", "JWT"],
     liveUrl: "https://hackathon-todo-app-five.vercel.app/",
-    githubUrl: "#",
+    githubUrl: "https://github.com/MohammadHuzaifa-qazi/Hackathon-Todo_App",
     tag: "Hackathon II",
   },
   {
@@ -94,7 +94,7 @@ export const PROJECTS = [
       "Generated a complete textbook on Physical AI & Humanoid Robotics using spec-driven development and AI-assisted content generation.",
     tech: ["Python", "FastAPI", "RAG", "Docusaurus"],
     liveUrl: "https://huzaifaqazi.github.io/Hackathon_Book_Generated",
-    githubUrl: "#",
+    githubUrl: "https://github.com/MohammadHuzaifa-qazi/Hackathon_Book_Generated",
     tag: "Hackathon I",
   },
   {
@@ -103,7 +103,7 @@ export const PROJECTS = [
       "Designed and developed a premium brand showcase for a real client featuring parallax scroll, glass-morphism UI, and animated product pages.",
     tech: ["Next.js 16", "Tailwind CSS v4", "Framer Motion", "Web3Forms"],
     liveUrl: "https://central-scents-perfume-store.vercel.app",
-    githubUrl: "#",
+    githubUrl: "https://github.com/MohammadHuzaifa-qazi/Central_Scents_Perfume_website",
     tag: "Freelance Client",
   },
   {
@@ -130,7 +130,7 @@ export const PROJECTS = [
       "Developed a complex agentic pipeline using LangGraph state machines for multi-step AI workflows.",
     tech: ["Python", "LangGraph", "LangChain"],
     liveUrl: "#",
-    githubUrl: "#",
+    githubUrl: "https://github.com/MohammadHuzaifa-qazi/AgenticAI-Using-LangGraph",
     tag: "AI Project",
   },
 ];
