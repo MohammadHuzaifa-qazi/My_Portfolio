@@ -121,7 +121,7 @@ export const PROJECTS = [
       "Built a retrieval-augmented chatbot that answers questions about my resume — embeds resume data, retrieves relevant context, and generates accurate responses.",
     tech: ["Python", "Streamlit", "RAG", "LangChain", "GroqLLM"],
     liveUrl: "https://huzaifa-resume-chatbot.streamlit.app/",
-    githubUrl: "#",
+    githubUrl: "https://github.com/MohammadHuzaifa-qazi/AgenticAI-Using-LangGraph/tree/main/projects/chatbot",
     tag: "AI Rag Project",
   },
   {
