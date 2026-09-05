@@ -97,7 +97,7 @@ export function Navbar() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 md:mr-6">
             <GitHubBtn />
 
             <button
