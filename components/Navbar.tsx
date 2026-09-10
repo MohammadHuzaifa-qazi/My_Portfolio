@@ -56,7 +56,39 @@ export function Navbar() {
         >
           <div className="flex items-center gap-4">
             <div className="grid h-12 w-12 place-items-center rounded-[1.4rem] border border-white/10 bg-white/[0.04]">
-              <div className="h-5 w-5 rounded-full bg-[#61DAFB] shadow-[0_0_25px_rgba(97,218,251,0.6)]" />
+              <svg
+                className="h-8 w-8"
+                viewBox="0 0 100 100"
+                aria-hidden="true"
+              >
+                <defs>
+                  <radialGradient id="navLogoGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#61DAFB" />
+                    <stop offset="100%" stopColor="#0097b2" />
+                  </radialGradient>
+                </defs>
+                <circle cx="50" cy="50" r="45" fill="url(#navLogoGlow)" />
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="none"
+                  stroke="#61DAFB"
+                  strokeWidth="3"
+                  opacity="0.6"
+                />
+                <text
+                  x="50"
+                  y="62"
+                  fontFamily="Arial, sans-serif"
+                  fontSize="40"
+                  fontWeight="bold"
+                  fill="#05070b"
+                  textAnchor="middle"
+                >
+                  H
+                </text>
+              </svg>
             </div>
             <div>
               <div className="font-sans text-[10px] uppercase tracking-[0.3em] text-white/40">
