@@ -9,6 +9,7 @@ import { Projects } from "@/components/Projects";
 import { Achievements } from "@/components/Achievements";
 import { GitHubStats } from "@/components/GitHubStats";
 import { Contact } from "@/components/Contact";
+import { ChatWidget } from "@/components/chat/ChatWidget";
 import { TracingBeam } from "@/components/ui/tracing-beam";
 
 export default function Home() {
@@ -42,6 +43,7 @@ export default function Home() {
           </div>
         </footer>
       </TracingBeam>
+      <ChatWidget />
     </>
   );
 }
