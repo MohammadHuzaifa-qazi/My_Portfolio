@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 import { SITE_CONFIG } from "@/lib/constants";
 
 type Message = { role: "user" | "assistant"; content: string };
@@ -176,7 +177,37 @@ export function ChatWidget() {
                         : "rounded-bl-md bg-white/[0.05] text-white/75 border border-white/[0.06]"
                     }`}
                   >
-                    {msg.content}
+                    <ReactMarkdown
+                      components={{
+                        p: ({ children }) => <p className="mb-1.5 last:mb-0">{children}</p>,
+                        ul: ({ children }) => (
+                          <ul className="mb-1.5 ml-4 list-disc space-y-1 last:mb-0">{children}</ul>
+                        ),
+                        ol: ({ children }) => (
+                          <ol className="mb-1.5 ml-4 list-decimal space-y-1 last:mb-0">{children}</ol>
+                        ),
+                        li: ({ children }) => <li>{children}</li>,
+                        strong: ({ children }) => (
+                          <strong className="font-semibold text-white">{children}</strong>
+                        ),
+                        em: ({ children }) => <em className="italic">{children}</em>,
+                        a: ({ href, children }) => (
+                          <a
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#61DAFB] underline underline-offset-2 break-all"
+                          >
+                            {children}
+                          </a>
+                        ),
+                        code: ({ children }) => (
+                          <code className="rounded bg-white/10 px-1.5 py-0.5 text-[12px]">{children}</code>
+                        ),
+                      }}
+                    >
+                      {msg.content}
+                    </ReactMarkdown>
                   </div>
                 </motion.div>
               ))}
