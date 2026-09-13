@@ -4,11 +4,34 @@ import { PERSONA_PROMPT, FALLBACK_CONTEXT } from "@/lib/chat/knowledge";
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = "openai/gpt-oss-20b";
 const MAX_HISTORY = 12; // last N messages sent to Groq — keeps free-tier usage low
-const MATCH_COUNT = 4; // top N knowledge chunks retrieved per question
+const MATCH_COUNT = 4; // top N knowledge chunks retrieved per search
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
-// --- RAG helpers (Supabase + Edge Function embeddings) ---
+// The agent's only tool: vector search over Huzaifa's knowledge base.
+const TOOLS = [
+  {
+    type: "function",
+    function: {
+      name: "search_portfolio_knowledge",
+      description:
+        "Search Huzaifa's portfolio knowledge base (resume, skills, projects, achievements, hackathons, GitHub, contact). Use for ANY question about Huzaifa.",
+      parameters: {
+        type: "object",
+        properties: {
+          query: {
+            type: "string",
+            description:
+              "What to search for, e.g. 'projects built' or 'education' or 'skills'",
+          },
+        },
+        required: ["query"],
+      },
+    },
+  },
+];
+
+// --- Knowledge search (Supabase pgvector + Edge Function embeddings) ---
 
 function supabaseConfig() {
   const url = process.env.SUPABASE_URL;
@@ -17,7 +40,7 @@ function supabaseConfig() {
   return { url, key };
 }
 
-// Call the Supabase Edge Function to get the question's embedding (gte-small, 384 dims)
+// Call the Supabase Edge Function to get text's embedding (gte-small, 384 dims)
 async function getEmbedding(text: string): Promise<number[] | null> {
   const config = supabaseConfig();
   if (!config) return null;
@@ -36,22 +59,20 @@ async function getEmbedding(text: string): Promise<number[] | null> {
 
     const data = await res.json();
     const embedding = data.embedding;
-    if (Array.isArray(embedding) && embedding.length > 0) {
-      return embedding;
-    }
-    return null;
+    return Array.isArray(embedding) && embedding.length > 0 ? embedding : null;
   } catch {
     return null;
   }
 }
 
-// Vector similarity search: find the most relevant knowledge chunks
-async function retrieveContext(question: string): Promise<string | null> {
+// The tool's implementation. Falls back to the full knowledge base if
+// Supabase/embeddings are unavailable — the chatbot never dies.
+async function searchKnowledge(query: string): Promise<string> {
   const config = supabaseConfig();
-  if (!config) return null;
+  if (!config) return FALLBACK_CONTEXT;
 
-  const queryEmbedding = await getEmbedding(question);
-  if (!queryEmbedding) return null;
+  const queryEmbedding = await getEmbedding(query);
+  if (!queryEmbedding) return FALLBACK_CONTEXT;
 
   try {
     const res = await fetch(`${config.url}/rest/v1/rpc/match_documents`, {
@@ -66,16 +87,15 @@ async function retrieveContext(question: string): Promise<string | null> {
         match_count: MATCH_COUNT,
       }),
     });
-    if (!res.ok) return null;
+    if (!res.ok) return FALLBACK_CONTEXT;
 
     const rows = await res.json();
-    if (!Array.isArray(rows) || rows.length === 0) return null;
+    if (!Array.isArray(rows) || rows.length === 0) return FALLBACK_CONTEXT;
 
     console.log(
-      "[chat] RAG retrieved:",
+      "[chat] tool search:",
       rows.map((row: { title?: string }) => row.title).join(" | ")
     );
-
     return rows
       .map((row: { title?: string; content?: string }) => {
         const title = row.title ? `[${row.title}] ` : "";
@@ -83,11 +103,11 @@ async function retrieveContext(question: string): Promise<string | null> {
       })
       .join("\n");
   } catch {
-    return null;
+    return FALLBACK_CONTEXT;
   }
 }
 
-// --- Main endpoint ---
+// --- Main endpoint: agentic flow with streaming response ---
 
 export async function POST(request: Request) {
   const apiKey = process.env.GROQ_API_KEY;
@@ -127,53 +147,158 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "No valid messages." }, { status: 400 });
   }
 
-  // RAG: retrieve relevant chunks for the latest question.
-  // Falls back to the full knowledge base if Supabase/embeddings are unavailable.
-  const lastQuestion = [...messages].reverse().find((m) => m.role === "user");
-  const context = (await retrieveContext(lastQuestion?.content ?? "")) ?? FALLBACK_CONTEXT;
-  if (context === FALLBACK_CONTEXT) {
-    console.log("[chat] RAG unavailable — using full knowledge fallback");
-  }
+  const groqHeaders = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${apiKey}`,
+  };
+  const agentMessages: Array<Record<string, unknown>> = [
+    { role: "system", content: PERSONA_PROMPT },
+    ...messages,
+  ];
 
-  const systemPrompt = `${PERSONA_PROMPT}
-
-CONTEXT — About Mohammad Huzaifa:
-${context}`;
+  // --- Agent decision phase: should the tool be used? ---
+  let usedRag = false;
+  let directReply: string | null = null;
 
   try {
-    const groqRes = await fetch(GROQ_API_URL, {
+    const decisionRes = await fetch(GROQ_API_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
+      headers: groqHeaders,
       body: JSON.stringify({
         model: MODEL,
-        messages: [{ role: "system", content: systemPrompt }, ...messages],
-        max_tokens: 500,
+        messages: agentMessages,
+        tools: TOOLS,
+        tool_choice: "auto",
+        max_tokens: 400,
         temperature: 0.4,
       }),
     });
 
-    if (!groqRes.ok) {
-      console.error("Groq API error:", groqRes.status, await groqRes.text());
+    if (!decisionRes.ok) {
+      console.error("Groq decision error:", decisionRes.status, await decisionRes.text());
       return NextResponse.json(
         { error: "The assistant is unavailable right now. Please try again in a moment." },
         { status: 502 }
       );
     }
 
-    const data = await groqRes.json();
-    const reply: string | undefined = data.choices?.[0]?.message?.content;
+    const decision = await decisionRes.json();
+    const choice = decision.choices?.[0];
+    const toolCalls = choice?.message?.tool_calls;
 
-    if (!reply) {
+    if (Array.isArray(toolCalls) && toolCalls.length > 0) {
+      // The agent wants to search — run the tool(s), then answer with a streaming call
+      agentMessages.push(choice.message);
+
+      for (const toolCall of toolCalls) {
+        let result: string;
+        try {
+          const args = JSON.parse(toolCall.function?.arguments || "{}");
+          result = await searchKnowledge(String(args.query ?? messages.at(-1)?.content ?? ""));
+        } catch {
+          result = await searchKnowledge(messages.at(-1)?.content ?? "");
+        }
+        if (result !== FALLBACK_CONTEXT) usedRag = true;
+        agentMessages.push({
+          role: "tool",
+          tool_call_id: toolCall.id,
+          content: result,
+        });
+      }
+      console.log("[chat] agent used search tool — answering with RAG context");
+    } else {
+      // No tool needed (greeting / general chat) — reply directly, whole message
+      const reply: string | undefined = choice?.message?.content;
+      if (!reply) {
+        return NextResponse.json(
+          { error: "The assistant is unavailable right now. Please try again in a moment." },
+          { status: 502 }
+        );
+      }
+      directReply = reply;
+    }
+  } catch {
+    return NextResponse.json(
+      { error: "Network error — please try again in a moment." },
+      { status: 500 }
+    );
+  }
+
+  if (directReply !== null) {
+    return new Response(directReply, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-cache",
+        "X-Used-Rag": "0",
+      },
+    });
+  }
+
+  // --- Streaming phase: stream the final answer word-by-word ---
+  try {
+    const streamRes = await fetch(GROQ_API_URL, {
+      method: "POST",
+      headers: groqHeaders,
+      body: JSON.stringify({
+        model: MODEL,
+        messages: agentMessages,
+        max_tokens: 500,
+        temperature: 0.4,
+        stream: true,
+      }),
+    });
+
+    if (!streamRes.ok || !streamRes.body) {
+      console.error("Groq stream error:", streamRes.status, await streamRes.text());
       return NextResponse.json(
         { error: "The assistant is unavailable right now. Please try again in a moment." },
         { status: 502 }
       );
     }
 
-    return NextResponse.json({ reply, usedRag: context !== FALLBACK_CONTEXT });
+    // Parse Groq's SSE and forward plain text chunks to the client
+    const groqReader = streamRes.body.getReader();
+    const decoder = new TextDecoder();
+    const encoder = new TextEncoder();
+
+    const stream = new ReadableStream({
+      async start(controller) {
+        let buffer = "";
+        try {
+          while (true) {
+            const { done, value } = await groqReader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+
+            const lines = buffer.split("\n");
+            buffer = lines.pop() ?? "";
+
+            for (const line of lines) {
+              if (!line.startsWith("data:")) continue;
+              const payload = line.slice(5).trim();
+              if (!payload || payload === "[DONE]") continue;
+              try {
+                const json = JSON.parse(payload);
+                const delta: string | undefined = json.choices?.[0]?.delta?.content;
+                if (delta) controller.enqueue(encoder.encode(delta));
+              } catch {
+                // ignore malformed keep-alive chunks
+              }
+            }
+          }
+        } finally {
+          controller.close();
+        }
+      },
+    });
+
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-cache",
+        "X-Used-Rag": usedRag ? "1" : "0",
+      },
+    });
   } catch {
     return NextResponse.json(
       { error: "Network error — please try again in a moment." },

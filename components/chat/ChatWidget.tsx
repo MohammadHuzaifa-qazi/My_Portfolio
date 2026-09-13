@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { LoaderTwo } from "@/components/ui/loader";
 import { SITE_CONFIG } from "@/lib/constants";
 
 type Message = { role: "user" | "assistant"; content: string };
@@ -19,21 +20,6 @@ const WELCOME_MESSAGE: Message = {
   content:
     "Hi! I'm Huzaifa's AI assistant. Ask me anything about his skills, projects, or experience.",
 };
-
-function TypingDots() {
-  return (
-    <div className="flex items-center gap-1.5 px-1">
-      {[0, 1, 2].map((i) => (
-        <motion.div
-          key={i}
-          className="h-1.5 w-1.5 rounded-full bg-[#61DAFB]"
-          animate={{ opacity: [0.3, 1, 0.3], y: [0, -3, 0] }}
-          transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
-        />
-      ))}
-    </div>
-  );
-}
 
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -60,9 +46,36 @@ export function ChatWidget() {
     if (!question || isLoading) return;
 
     const newMessages: Message[] = [...messages, { role: "user", content: question }];
-    setMessages(newMessages);
+    // Add an empty assistant message — it fills up as the answer is revealed
+    setMessages([...newMessages, { role: "assistant", content: "" }]);
     setInput("");
     setIsLoading(true);
+
+    const updateLast = (content: string) => {
+      setMessages((prev) => {
+        const copy = [...prev];
+        copy[copy.length - 1] = { role: "assistant", content };
+        return copy;
+      });
+    };
+
+    // Typewriter smoothing: Groq streams the whole answer in one quick burst,
+    // so we reveal the accumulated text at a steady, readable pace instead.
+    let target = "";
+    let displayed = 0;
+    let streamDone = false;
+
+    const revealTimer = setInterval(() => {
+      if (displayed < target.length) {
+        const speed = Math.max(2, Math.ceil(target.length / 50)); // ~1.5s full reveal
+        displayed = Math.min(target.length, displayed + speed);
+        updateLast(target.slice(0, displayed));
+      }
+      if (streamDone && displayed >= target.length) {
+        clearInterval(revealTimer);
+        setIsLoading(false);
+      }
+    }, 30);
 
     try {
       const res = await fetch("/api/chat", {
@@ -70,27 +83,31 @@ export function ChatWidget() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: newMessages }),
       });
-      const data = await res.json();
-      setMessages([
-        ...newMessages,
-        {
-          role: "assistant",
-          content:
-            data.reply ||
-            data.error ||
-            "Something went wrong. Please try again in a moment.",
-        },
-      ]);
+
+      if (!res.ok || !res.body) {
+        const data = await res.json().catch(() => null);
+        target = data?.error || "Something went wrong. Please try again in a moment.";
+        streamDone = true;
+        return;
+      }
+
+      // Read the streamed answer chunk by chunk into `target`
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        target += decoder.decode(value, { stream: true });
+      }
+      if (!target.trim()) {
+        target = "Something went wrong. Please try again in a moment.";
+      }
+      streamDone = true;
     } catch {
-      setMessages([
-        ...newMessages,
-        {
-          role: "assistant",
-          content: "Network error — please try again in a moment.",
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
+      if (!target.trim()) {
+        target = "Network error — please try again in a moment.";
+      }
+      streamDone = true;
     }
   }
 
@@ -162,22 +179,31 @@ export function ChatWidget() {
 
             {/* Messages */}
             <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
-              {messages.map((msg, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.25 }}
-                  className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-                >
-                  <div
-                    className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-[13px] leading-relaxed ${
-                      msg.role === "user"
-                        ? "rounded-br-md bg-[#61DAFB]/15 text-white/90 border border-[#61DAFB]/20"
-                        : "rounded-bl-md bg-white/[0.05] text-white/75 border border-white/[0.06]"
-                    }`}
+              {messages.map((msg, i) => {
+                const isLastAssistant =
+                  i === messages.length - 1 && msg.role === "assistant";
+                const isPending = isLoading && isLastAssistant && !msg.content;
+                const isGenerating = isLoading && isLastAssistant && !!msg.content;
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                   >
-                    <ReactMarkdown
+                    <div
+                      className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-[13px] leading-relaxed ${
+                        msg.role === "user"
+                          ? "rounded-br-md bg-[#61DAFB]/15 text-white/90 border border-[#61DAFB]/20"
+                          : "rounded-bl-md bg-white/[0.05] text-white/75 border border-white/[0.06]"
+                      }`}
+                    >
+                      {isPending ? (
+                        <LoaderTwo />
+                      ) : (
+                        <>
+                          <ReactMarkdown
                       components={{
                         p: ({ children }) => <p className="mb-1.5 last:mb-0">{children}</p>,
                         ul: ({ children }) => (
@@ -208,17 +234,15 @@ export function ChatWidget() {
                     >
                       {msg.content}
                     </ReactMarkdown>
+                          {isGenerating && (
+                            <span className="ml-0.5 inline-block h-3.5 w-[2px] translate-y-0.5 animate-pulse bg-[#61DAFB]" />
+                          )}
+                        </>
+                      )}
                   </div>
                 </motion.div>
-              ))}
-
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div className="rounded-2xl rounded-bl-md border border-white/[0.06] bg-white/[0.05] px-4 py-3">
-                    <TypingDots />
-                  </div>
-                </div>
-              )}
+                );
+              })}
 
               {/* Suggested questions — only until first user message */}
               {messages.length === 1 && !isLoading && (

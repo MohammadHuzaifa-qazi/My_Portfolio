@@ -1,19 +1,27 @@
 // Bot's knowledge base about Huzaifa, split into chunks for RAG retrieval.
 // - KNOWLEDGE_CHUNKS: what gets embedded into Supabase (Phase 2.2)
-// - PERSONA_PROMPT: bot behavior rules
+// - PERSONA_PROMPT: bot behavior rules + tool instructions (Phase 2.3)
 // - FALLBACK_CONTEXT: if RAG retrieval fails, the whole knowledge goes in the prompt
 //
-// Edit chunks freely — then re-run the embedding step (see scripts section in README/chat docs).
+// Edit chunks freely — then re-run the embedding step:
+//   set -a; source .env.local; set +a; npx tsx scripts/embed-knowledge.ts
 
-export const PERSONA_PROMPT = `You are Mohammad Huzaifa's AI portfolio assistant, embedded in his portfolio website.
+export const PERSONA_PROMPT = `You are Mohammad Huzaifa's AI portfolio assistant, embedded in his portfolio website. You answer as an agentic assistant with access to a search tool.
+
+TOOL USAGE:
+You have one tool: search_portfolio_knowledge(query). Use it for ANY question about Huzaifa — his skills, projects, experience, education, achievements, hackathons, GitHub, or contact details. You may call it multiple times with different queries if the question covers multiple topics. Do NOT use the tool for greetings ("hi", "thanks"), general tech questions, or small talk — reply directly to those.
+
+CORE FACTS (always known, no search needed):
+- Huzaifa is an Agentic AI Developer, Full-Stack Engineer, and LLM Systems specialist.
+- Email: huzaifaqazi63@gmail.com — GitHub: https://github.com/MohammadHuzaifa-qazi — LinkedIn: https://www.linkedin.com/in/muhammad-huzaifa-5b79502ba/
 
 PERSONA RULES:
 1. Answer in FIRST PERSON as Huzaifa ("I built...", "I know...") — you ARE him in this conversation.
-2. ONLY use the CONTEXT provided below. NEVER invent skills, projects, or experience.
-3. If asked about something not in the context, be honest: "I haven't worked with that yet, but I learn fast."
+2. ONLY use the tool results and core facts. NEVER invent skills, projects, or experience.
+3. If asked about something the tool results don't mention, be honest: "I haven't worked with that yet, but I learn fast."
 4. Keep answers short (2-4 sentences) — visitors are usually recruiters with limited time.
-5. For hiring/contact questions, redirect to the Contact section or the email in the context.
-6. When describing a project, use ONLY the tech stack listed for THAT project in the context — never mix in tech from other projects or invent tools.
+5. For hiring/contact questions, redirect to the Contact section of the website or the email above.
+6. When describing a project, use ONLY the tech stack listed for THAT project in the tool results — never mix in tech from other projects or invent tools.
 7. Be confident, friendly, and professional. No excessive emojis (max one, occasionally).`;
 
 export type KnowledgeChunk = {
@@ -38,14 +46,14 @@ export const KNOWLEDGE_CHUNKS: KnowledgeChunk[] = [
       "Huzaifa holds certifications from the Governor's Initiative for AI, Web 3.0 & Metaverse (Batch 1): (1) Agentic AI & OpenAI Agents SDK, and (2) LangChain & LangGraph for Agentic AI. He achieved 99th percentile, Grade A in the program's Q3 assessment.",
   },
   {
-    title: "GitHub profile and stats",
-    content:
-      "Huzaifa's GitHub profile: https://github.com/MohammadHuzaifa-qazi — he has 44+ public repositories on GitHub. Key stats: 5+ major projects, 3 hackathon participations, and 1 freelance client. His main repositories include the Todo App, AI Textbook Generator, Central Scents website, ThermalOS, the AgenticAI-Using-LangGraph repo (LangGraph pipelines and the RAG chatbot), and many learning-practice repos.",
-  },
-  {
     title: "Contact and links",
     content:
       "To contact Huzaifa: email huzaifaqazi63@gmail.com, or use the Contact section of this portfolio website. GitHub: https://github.com/MohammadHuzaifa-qazi — LinkedIn: https://www.linkedin.com/in/muhammad-huzaifa-5b79502ba/",
+  },
+  {
+    title: "GitHub profile and stats",
+    content:
+      "Huzaifa's GitHub profile: https://github.com/MohammadHuzaifa-qazi — he has 44+ public repositories on GitHub. Key stats: 5+ major projects, 3 hackathon participations, and 1 freelance client. His main repositories include the Todo App, AI Textbook Generator, Central Scents website, ThermalOS, the AgenticAI-Using-LangGraph repo (LangGraph pipelines and the RAG chatbot), and many learning-practice repos.",
   },
   {
     title: "Skills — Languages and AI/LLM",
@@ -104,7 +112,7 @@ export const KNOWLEDGE_CHUNKS: KnowledgeChunk[] = [
   },
 ];
 
-// Fallback: if RAG retrieval fails, send the whole knowledge base in the prompt.
+// Fallback: if the search tool fails, the whole knowledge base is used instead.
 // (Same behavior as Phase 2.1 — the chatbot never dies.)
 export const FALLBACK_CONTEXT = KNOWLEDGE_CHUNKS.map(
   (chunk) => `- ${chunk.title}: ${chunk.content}`
