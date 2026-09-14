@@ -13,7 +13,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = "https://myportfolio-git-main-huzaifa-qazis-projects.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Mohammad Huzaifa | Agentic AI Developer",
   description:
     "Portfolio of Mohammad Huzaifa — Agentic AI Developer, Full-Stack Engineer, and Rag Based LLM Systems specialist. Building production-ready AI applications.",
@@ -28,6 +31,9 @@ export const metadata: Metadata = {
     "Portfolio",
   ],
   authors: [{ name: "Mohammad Huzaifa" }],
+  alternates: {
+    canonical: "/",
+  },
   icons: {
     icon: "/favicon.svg",
   },
@@ -37,6 +43,20 @@ export const metadata: Metadata = {
       "Portfolio of Mohammad Huzaifa — Agentic AI Developer, Full-Stack Engineer, and Rag based LLM Systems specialist.",
     type: "website",
     locale: "en_US",
+    url: "/",
+  },
+  twitter: {
+    card: "summary",
+    title: "Mohammad Huzaifa | Agentic AI Developer",
+    description:
+      "Agentic AI Developer — LangChain, LangGraph, RAG, Next.js. Chat with my AI portfolio assistant.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  verification: {
+    google: "yefDZUVfsBzgFwasIoLmHTKHNif6kdwnAm7YwIlAzVE",
   },
 };
 
