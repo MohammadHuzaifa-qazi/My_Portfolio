@@ -157,13 +157,13 @@ export const ACHIEVEMENTS = [
     date: "2024",
   },
   {
-    title: "Agentic AI & OpenAI Agents SDK",
-    description: "Certification — Governor's Initiative",
-    date: "2024",
+    title: "AI Fluency: Framework & Foundations",
+    description: "Certification — Anthropic",
+    date: "2026",
   },
   {
-    title: "LangChain & LangGraph for Agentic AI",
-    description: "Certification — Governor's Initiative",
-    date: "2024",
+    title: "Oracle Certified Foundations Associate",
+    description: "Certification — Oracle University",
+    date: "2026",
   },
 ];

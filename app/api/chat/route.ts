@@ -107,6 +107,46 @@ async function searchKnowledge(query: string): Promise<string> {
   }
 }
 
+// --- Best-effort abuse protection -------------------------------------------
+// In-memory sliding window, keyed by client IP. On serverless this is
+// per-instance and resets on a cold start, so it raises the cost of casual
+// abuse rather than stopping a determined attacker — a durable limiter would
+// need Redis/KV. Without any limiter one script can drain the Groq free tier
+// and take the assistant offline for real visitors.
+const RATE_LIMIT = 10; // requests…
+const RATE_WINDOW_MS = 60_000; // …per minute, per IP
+const hits = new Map<string, number[]>();
+
+function clientKey(request: Request): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  return (
+    forwarded?.split(",")[0]?.trim() ||
+    request.headers.get("x-real-ip") ||
+    "unknown"
+  );
+}
+
+function isRateLimited(key: string): boolean {
+  const now = Date.now();
+  const recent = (hits.get(key) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
+
+  if (recent.length >= RATE_LIMIT) {
+    hits.set(key, recent);
+    return true;
+  }
+
+  recent.push(now);
+  hits.set(key, recent);
+
+  // Opportunistic sweep so the map can't grow without bound.
+  if (hits.size > 5000) {
+    for (const [k, times] of hits) {
+      if (times.every((t) => now - t >= RATE_WINDOW_MS)) hits.delete(k);
+    }
+  }
+  return false;
+}
+
 // --- Main endpoint: agentic flow with streaming response ---
 
 export async function POST(request: Request) {
@@ -116,6 +156,13 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "Chat is not configured yet — GROQ_API_KEY is missing." },
       { status: 500 }
+    );
+  }
+
+  if (isRateLimited(clientKey(request))) {
+    return NextResponse.json(
+      { error: "That's a lot of questions! Please wait a minute and try again." },
+      { status: 429, headers: { "Retry-After": "60" } }
     );
   }
 

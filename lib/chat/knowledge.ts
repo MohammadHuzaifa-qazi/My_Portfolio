@@ -51,7 +51,7 @@ export const KNOWLEDGE_CHUNKS: KnowledgeChunk[] = [
   {
     title: "Certifications",
     content:
-      "Huzaifa holds certifications from the Governor's Initiative for AI, Web 3.0 & Metaverse (Batch 1): (1) Agentic AI & OpenAI Agents SDK, and (2) LangChain & LangGraph for Agentic AI. He achieved 99th percentile, Grade A in the program's Q3 assessment.",
+      "Huzaifa holds four certifications: (1) AI Fluency: Framework & Foundations from Anthropic (2026), (2) Oracle Certified Foundations Associate from Oracle University (2026), (3) Agentic AI & OpenAI Agents SDK from the Governor's Initiative for AI, Web 3.0 & Metaverse (Batch 1, 2024), and (4) LangChain & LangGraph for Agentic AI, also from the Governor's Initiative (2024). He additionally achieved 99th percentile with Grade A in the Governor's Initiative Q3 assessment.",
   },
   {
     title: "Contact and links",

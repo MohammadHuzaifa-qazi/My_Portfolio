@@ -44,3 +44,6 @@ next-env.d.ts
 
 # local CV copy (root)
 /Huzaifa_CV.pdf
+
+# certificate PDFs — kept local, only the names appear on the site
+/certificates/
