@@ -51,7 +51,7 @@ export const KNOWLEDGE_CHUNKS: KnowledgeChunk[] = [
   {
     title: "Certifications",
     content:
-      "Huzaifa holds five certifications: (1) AI Fluency: Framework & Foundations from Anthropic (2026), (2) Oracle Certified Foundations Associate from Oracle University (2026), (3) Certificate of Demonstrated Excellence from the FortyGuard Hackathon '26 (August 2026, awarded for ThermalOS — an autonomous microclimate grid intelligence platform), (4) Agentic AI & OpenAI Agents SDK from the Governor's Initiative for AI, Web 3.0 & Metaverse (Batch 1, 2024), and (5) LangChain & LangGraph for Agentic AI, also from the Governor's Initiative (2024). He additionally achieved 99th percentile with Grade A in the Governor's Initiative Q3 assessment.",
+      "Huzaifa holds six certifications: (1) AI Fluency: Framework & Foundations from Anthropic (2026), (2) Oracle Certified Foundations Associate from Oracle University (2026), (3) a Certificate of Demonstrated Excellence from the FortyGuard Hackathon '26 (August 2026, awarded for ThermalOS — an autonomous microclimate grid intelligence platform), (4) a participation certificate for QuizOff 2026, India's Biggest AI Quiz, run by CampusCrew on Unstop (July 2026, where he competed among 525,000+ students from 48,500+ institutions), (5) Agentic AI & OpenAI Agents SDK from the Governor's Initiative for AI, Web 3.0 & Metaverse (Batch 1, 2024), and (6) LangChain & LangGraph for Agentic AI, also from the Governor's Initiative (2024). He additionally achieved 99th percentile with Grade A in the Governor's Initiative Q3 assessment.",
   },
   {
     title: "Contact and links",

@@ -153,6 +153,11 @@ export const ACHIEVEMENTS = [
     date: "2026",
   },
   {
+    title: "QuizOff 2026 — India's Biggest AI Quiz",
+    description: "Certificate of Participation — CampusCrew, hosted on Unstop",
+    date: "2026",
+  },
+  {
     title: "GIAIC Hackathon II",
     description: "Spec-Driven Full-Stack Development",
     date: "2024",
