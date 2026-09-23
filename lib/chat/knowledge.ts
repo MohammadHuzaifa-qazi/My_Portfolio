@@ -51,7 +51,7 @@ export const KNOWLEDGE_CHUNKS: KnowledgeChunk[] = [
   {
     title: "Certifications",
     content:
-      "Huzaifa holds four certifications: (1) AI Fluency: Framework & Foundations from Anthropic (2026), (2) Oracle Certified Foundations Associate from Oracle University (2026), (3) Agentic AI & OpenAI Agents SDK from the Governor's Initiative for AI, Web 3.0 & Metaverse (Batch 1, 2024), and (4) LangChain & LangGraph for Agentic AI, also from the Governor's Initiative (2024). He additionally achieved 99th percentile with Grade A in the Governor's Initiative Q3 assessment.",
+      "Huzaifa holds five certifications: (1) AI Fluency: Framework & Foundations from Anthropic (2026), (2) Oracle Certified Foundations Associate from Oracle University (2026), (3) Certificate of Demonstrated Excellence from the FortyGuard Hackathon '26 (August 2026, awarded for ThermalOS — an autonomous microclimate grid intelligence platform), (4) Agentic AI & OpenAI Agents SDK from the Governor's Initiative for AI, Web 3.0 & Metaverse (Batch 1, 2024), and (5) LangChain & LangGraph for Agentic AI, also from the Governor's Initiative (2024). He additionally achieved 99th percentile with Grade A in the Governor's Initiative Q3 assessment.",
   },
   {
     title: "Contact and links",
@@ -106,7 +106,7 @@ export const KNOWLEDGE_CHUNKS: KnowledgeChunk[] = [
   {
     title: "Achievements and hackathons",
     content:
-      "Huzaifa has participated in 3 hackathons: GIAIC Hackathon I (2024), GIAIC Hackathon II (2024, spec-driven full-stack development), and the Forty Guard Hackathon (2024, ThermalOS team project). He also completed the Governor's Initiative for AI, Web 3.0 & Metaverse with 99th percentile, Grade A.",
+      "Huzaifa has participated in 3 hackathons: GIAIC Hackathon I (2024), GIAIC Hackathon II (2024, spec-driven full-stack development), and the FortyGuard Hackathon '26 (August 2026, where his team built ThermalOS — an autonomous microclimate grid intelligence platform, earning him a Certificate of Demonstrated Excellence). He also completed the Governor's Initiative for AI, Web 3.0 & Metaverse with 99th percentile, Grade A.",
   },
   {
     title: "Learning journey",

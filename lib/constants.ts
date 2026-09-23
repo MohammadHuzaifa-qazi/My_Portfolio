@@ -137,6 +137,22 @@ export const PROJECTS = [
 
 export const ACHIEVEMENTS = [
   {
+    title: "AI Fluency: Framework & Foundations",
+    description: "Certification — Anthropic",
+    date: "2026",
+  },
+  {
+    title: "Oracle Certified Foundations Associate",
+    description: "Certification — Oracle University",
+    date: "2026",
+  },
+  {
+    title: "FortyGuard Hackathon '26",
+    description:
+      "Certificate of Demonstrated Excellence — ThermalOS, Autonomous Microclimate Grid Intelligence",
+    date: "2026",
+  },
+  {
     title: "GIAIC Hackathon II",
     description: "Spec-Driven Full-Stack Development",
     date: "2024",
@@ -147,23 +163,8 @@ export const ACHIEVEMENTS = [
     date: "2024",
   },
   {
-    title: "Forty Guard Hackathon",
-    description: "ThermalOS — Team Project",
-    date: "2024",
-  },
-  {
     title: "99th Percentile, Grade A",
     description: "Governor's Initiative for AI, Web 3.0 & Metaverse (Q3 Assessment)",
     date: "2024",
-  },
-  {
-    title: "AI Fluency: Framework & Foundations",
-    description: "Certification — Anthropic",
-    date: "2026",
-  },
-  {
-    title: "Oracle Certified Foundations Associate",
-    description: "Certification — Oracle University",
-    date: "2026",
   },
 ];
