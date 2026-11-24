@@ -24,7 +24,7 @@ const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const GROQ_MODEL = "qwen/qwen3.8-27b";
 
 // Repos to skip (forks, boilerplate, learning playgrounds with no real value)
-const SKIP_REPOS = new Set([
+const SKIP_REPOS = new Set<string>([
   // Add repo names here if you want to exclude them from the chatbot knowledge
   // e.g. "my-learning-notes", "template-repo"
 ]);
