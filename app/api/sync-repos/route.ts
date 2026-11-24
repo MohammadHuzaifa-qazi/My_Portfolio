@@ -20,7 +20,7 @@ import { NextResponse } from "next/server";
 
 const GITHUB_USERNAME = "MohammadHuzaifa-qazi";
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
-const GROQ_MODEL = "openai/gpt-oss-20b";
+const GROQ_MODEL = "qwen/qwen3.8-27b";
 const MIN_README_CHARS = 50;
 
 // Repos to skip (forks and repos with no useful content are already filtered,
@@ -120,13 +120,13 @@ async function generateSummary(
     ...repo.topics,
   ])].slice(0, 8).join(", ") || "Various technologies";
 
-  const prompt = `You are writing a knowledge entry for an AI portfolio chatbot.
-Given this GitHub repository info, write ONE concise paragraph (3-5 sentences max) describing:
-1. What the project does (purpose/features)
-2. Tech stack used
-3. Any notable detail (hackathon, client project, learning, etc.)
+  const prompt = `You are writing a detailed knowledge base entry for an AI portfolio chatbot.
+Given this GitHub repository info, write a thorough summary (4-6 sentences) describing:
+1. What problem this project solves and its core purpose
+2. Key features and architecture (e.g. agent loop, retrieval methods, database, verification)
+3. Tech stack used
 
-Write in third person about Huzaifa. Be factual, concise, recruiter-friendly. No fluff.
+Write in third person about Huzaifa. Be factual, technical, and recruiter-friendly. No fluff.
 
 Repo: ${repo.name}
 Description: ${repo.description || "No description"}
@@ -134,9 +134,9 @@ Tech: ${techStack}
 Stars: ${repo.stargazers_count}
 GitHub: ${repo.html_url}
 README:
-${readme?.slice(0, 1200) || "No README available"}
+${readme?.slice(0, 2500) || "No README available"}
 
-Write ONLY the paragraph.`;
+Write ONLY the summary paragraph.`;
 
   try {
     const res = await fetch(GROQ_API_URL, {
@@ -148,7 +148,7 @@ Write ONLY the paragraph.`;
       body: JSON.stringify({
         model: GROQ_MODEL,
         messages: [{ role: "user", content: prompt }],
-        max_tokens: 200,
+        max_tokens: 500,
         temperature: 0.3,
       }),
     });

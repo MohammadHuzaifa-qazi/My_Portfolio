@@ -21,7 +21,7 @@ import { KNOWLEDGE_CHUNKS } from "../lib/chat/knowledge";
 
 const GITHUB_USERNAME = "MohammadHuzaifa-qazi";
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
-const GROQ_MODEL = "openai/gpt-oss-20b";
+const GROQ_MODEL = "qwen/qwen3.8-27b";
 
 // Repos to skip (forks, boilerplate, learning playgrounds with no real value)
 const SKIP_REPOS = new Set([
@@ -165,16 +165,16 @@ async function generateProjectSummary(
 ): Promise<string> {
   const techStack =
     [...new Set([...(repo.language ? [repo.language] : []), ...languages, ...repo.topics])]
-      .slice(0, 8)
-      .join(", ") || "Not specified";
+      .slice(0, 10)
+      .join(", ") || "Python / TypeScript";
 
-  const prompt = `You are writing a knowledge entry for an AI portfolio chatbot. 
-Given this GitHub repository info, write ONE concise paragraph (3-5 sentences max) that describes:
-1. What the project does (purpose/features)
-2. Tech stack used
-3. Any notable detail (hackathon, client, learning project, etc.)
+  const prompt = `You are writing a detailed knowledge base entry for an AI portfolio chatbot.
+Given this GitHub repository info, write a thorough summary (4-6 sentences) that describes:
+1. What problem this project solves and its core purpose
+2. Key features and architecture (e.g. agent loop, retrieval methods, database, verification)
+3. Tech stack used
 
-Write in third person about Huzaifa. Be factual, concise, and recruiter-friendly. No fluff.
+Write in third person about Huzaifa. Be factual, technical, and recruiter-friendly. No fluff.
 
 Repo: ${repo.name}
 Description: ${repo.description || "No description provided"}
@@ -182,40 +182,50 @@ Tech Stack: ${techStack}
 Stars: ${repo.stargazers_count}
 GitHub URL: ${repo.html_url}
 README (excerpt):
-${readme ? readme.slice(0, 1500) : "No README available"}
+${readme ? readme.slice(0, 2500) : "No README available"}
 
-Write ONLY the paragraph, nothing else.`;
+Write ONLY the summary paragraph, nothing else.`;
 
-  try {
-    const res = await fetch(GROQ_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${GROQ_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: GROQ_MODEL,
-        messages: [{ role: "user", content: prompt }],
-        max_tokens: 200,
-        temperature: 0.3,
-      }),
-    });
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await fetch(GROQ_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${GROQ_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: GROQ_MODEL,
+          messages: [{ role: "user", content: prompt }],
+          max_tokens: 500,
+          temperature: 0.3,
+        }),
+      });
 
-    if (!res.ok) {
-      console.warn(`  ⚠️  Groq error for ${repo.name}: ${res.status}`);
-      // Fallback: build a basic summary from available metadata
-      return buildFallbackSummary(repo, techStack);
+      if (res.status === 429) {
+        console.warn(`  ⏳  Groq rate limited on ${repo.name}, waiting 5s (attempt ${attempt})...`);
+        await sleep(5000);
+        continue;
+      }
+
+      if (!res.ok) {
+        console.warn(`  ⚠️  Groq error for ${repo.name}: ${res.status}`);
+        await sleep(2000);
+        continue;
+      }
+
+      const data = await res.json();
+      const content: string = data.choices?.[0]?.message?.content?.trim() || "";
+      if (content && content.length > 50) {
+        return `${content} GitHub: ${repo.html_url}`;
+      }
+    } catch (err) {
+      console.warn(`  ⚠️  Groq request threw for ${repo.name} (attempt ${attempt}):`, err);
+      await sleep(2000);
     }
-
-    const data = await res.json();
-    const content: string = data.choices?.[0]?.message?.content?.trim() || "";
-    if (!content) return buildFallbackSummary(repo, techStack);
-
-    // Append the GitHub URL so chatbot can always link to it
-    return `${content} GitHub: ${repo.html_url}`;
-  } catch {
-    return buildFallbackSummary(repo, techStack);
   }
+
+  return buildFallbackSummary(repo, techStack);
 }
 
 function buildFallbackSummary(repo: GitHubRepo, techStack: string): string {
@@ -362,11 +372,11 @@ async function main() {
       continue;
     }
 
-    // Check if already synced — only re-sync if pushed_at changed
+    // Check if already synced — only re-sync if pushed_at changed AND it's not a low-detail fallback
     const existing = existingTitles.get(docTitle);
     if (existing) {
-      // Parse the first line of content for the pushed_at timestamp we stored
-      if (existing.content.includes(`pushed:${repo.pushed_at}`)) {
+      const isFallback = existing.content.includes("is a project by Huzaifa. Built with:");
+      if (!isFallback && existing.content.includes(`pushed:${repo.pushed_at}`)) {
         console.log(`✅  [UP-TO-DATE] ${repo.name}`);
         skipped++;
         continue;
@@ -415,8 +425,8 @@ async function main() {
       failed++;
     }
 
-    // Be gentle — avoid rate limiting
-    await sleep(300);
+    // Be gentle — avoid Groq rate limiting (30 req/min)
+    await sleep(1500);
   }
 
   // 5. Summary
