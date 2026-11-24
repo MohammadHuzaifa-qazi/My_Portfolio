@@ -1,0 +1,78 @@
+name: 🤖 Auto-Sync GitHub Projects to Portfolio Chatbot
+
+on:
+  # ── Scheduled: runs every 12 hours automatically ──────────────────────────
+  schedule:
+    - cron: "0 */12 * * *"   # Every 12 hours (UTC)
+
+  # ── Manual trigger from GitHub Actions tab (1-click) ──────────────────────
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Reason for manual sync (optional)"
+        required: false
+        default: "Manual trigger"
+
+  # ── Auto-trigger: runs whenever you push to main branch ───────────────────
+  push:
+    branches:
+      - main
+    paths-ignore:
+      # Don't re-sync when only these files change (avoid infinite loops)
+      - ".github/workflows/**"
+      - "*.md"
+      - ".gitignore"
+
+jobs:
+  sync:
+    name: Sync GitHub Repos → Supabase Vector DB
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      # ── 1. Checkout the portfolio repo ──────────────────────────────────────
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      # ── 2. Setup Node.js ────────────────────────────────────────────────────
+      - name: ⚙️ Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      # ── 3. Install dependencies ─────────────────────────────────────────────
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      # ── 4. Run the sync script ──────────────────────────────────────────────
+      - name: 🔄 Sync GitHub Projects to Supabase
+        env:
+          # Supabase credentials (add these in GitHub → Settings → Secrets)
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+          # Groq API key for AI summary generation
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+
+          # GitHub token — GITHUB_TOKEN is automatically available in Actions
+          # It gives 1000 req/hr (vs 60/hr unauthenticated), so we always use it
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── 5. Optionally trigger Vercel redeploy after sync ────────────────────
+      # Uncomment this step if you want the site to redeploy after every sync
+      # - name: 🚀 Trigger Vercel Redeploy (Optional)
+      #   if: success()
+      #   run: |
+      #     curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_URL }}"
+
+        run: npm run sync:repos
+
+      # ── 6. Report result ────────────────────────────────────────────────────
+      - name: ✅ Sync Complete
+        if: success()
+        run: echo "Sync completed successfully! Portfolio chatbot is now up to date."
+
+      - name: ❌ Sync Failed
+        if: failure()
+        run: echo "Sync failed. Check the logs above for details."

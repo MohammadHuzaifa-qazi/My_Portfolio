@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "sync:repos": "npx tsx scripts/sync-github-projects.ts",
+    "embed": "npx tsx scripts/embed-knowledge.ts"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
